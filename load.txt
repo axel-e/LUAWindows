@@ -1,0 +1,78 @@
+--Draw func
+function draw(dx1,dy1,dx2,dy2,dcol)
+  for a=dx1,dx2 do
+    for b=dy1,dy2 do
+      term.setCursorPos(a,b)
+      term.setBackgroundColor(dcol)
+      term.write(" ")
+    end
+  end
+end
+--Write func
+function text(tx,ty,tcol,tcolb,txt)
+  term.setCursorPos(tx,ty)
+  term.setTextColor(tcol)
+  term.setBackgroundColor(tcolb)
+  term.write(txt)
+end
+term.clear()
+--[[
+10 to 40-x
+10 to 11-y
+]]
+--Load1
+term.setCursorPos(18,19)
+term.write("Resuming Windows")
+draw(10,17,11,18,colors.red)--Tick1
+sleep(1)
+draw(11,17,12,18,colors.red)
+sleep(1)
+draw(14,17,15,18,colors.red)--Tick2
+sleep(1)
+draw(15,17,16,18,colors.red)
+sleep(1)
+draw(18,17,19,18,colors.red)--Tick3
+sleep(1)
+draw(19,17,20,18,colors.red)
+sleep(1)
+draw(22,17,23,18,colors.red)--Tick4
+sleep(1)
+draw(23,17,24,18,colors.red)
+sleep(1)
+draw(26,17,27,18,colors.red)--Tick5
+sleep(1)
+draw(27,17,28,18,colors.red)
+sleep(1)
+draw(30,17,31,18,colors.red)--Tick6
+sleep(1)
+draw(31,17,32,18,colors.red)
+sleep(1)
+draw(34,17,35,18,colors.red)--Tick7
+sleep(1)
+draw(35,17,36,18,colors.red)
+sleep(1)
+draw(38,17,39,18,colors.red)--Tick8
+sleep(1)
+draw(39,17,40,18,colors.red)
+--Load2
+draw(1,1,51,29,colors.lightBlue)
+draw(24,9,25,9,colors.red)
+draw(26,9,27,9,colors.green)
+draw(24,10,25,10,colors.blue)
+draw(26,10,27,10,colors.yellow)
+sleep(10)
+--Pre
+draw(1,1,51,20,colors.lightBlue)
+text(14,9,colors.white,colors.lightBlue,"Press CTRL + L to log on")
+--Login  
+os.pullEvent = os.pullEventRaw
+while true do
+  event, key, id = os.pullEvent()
+  if event == "key" then
+    if (key == keys.rightCtrl or key == keys.leftCtrl) and key == keys.s or key == keys.l then
+      shell.run("login")
+      break
+                
+    end
+  end
+end 
