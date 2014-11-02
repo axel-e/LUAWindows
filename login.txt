@@ -1,0 +1,110 @@
+term.clear()
+--Draw func
+function draw(dx1,dy1,dx2,dy2,dcol)
+  for a=dx1,dx2 do
+    for b=dy1,dy2 do
+      term.setCursorPos(a,b)
+      term.setBackgroundColor(dcol)
+      term.write(" ")
+    end
+  end
+end
+--Write func
+function text(tx,ty,tcol,tcolb,txt)
+  term.setCursorPos(tx,ty)
+  term.setTextColor(tcol)
+  term.setBackgroundColor(tcolb)
+  term.write(txt)
+end
+--Desktop
+--x min/max 1,51
+--y min/max 1,19
+function desktop()
+  draw(1,1,51,19,colors.lightBlue)--Desktop
+  draw(24,9,25,9,colors.red)
+  draw(26,9,27,9,colors.green)
+  draw(24,10,25,10,colors.blue)
+  draw(26,10,27,10,colors.yellow)
+  draw(1,18,51,19,colors.black)--StartBar
+  draw(1,18,2,18,colors.red)
+  draw(3,18,4,18,colors.green)
+  draw(1,19,2,19,colors.blue)
+  draw(3,19,4,19,colors.yellow)
+end
+--StartTab
+function starttab()
+  draw(1,7,10,16,colors.white)
+  draw(1,16,10,17,colors.lightGray)
+  draw(11,7,15,17,colors.blue)
+  text(2,15,colors.black,colors.white,"Minecraft")
+  text(1,16,colors.black,colors.lightGray,">All")
+  text(1,17,colors.black,colors.lightGray," Programs")
+  draw(12,16,14,16,colors.red)
+  sleep(1)
+end
+--Shutdown Desktop
+function shdnscrn()
+  term.clear()
+  draw(1,1,51,17,colors.gray)
+  draw(1,18,4,19,colors.black)
+  draw(5,18,51,19,colors.lightGray)
+  draw(24,9,27,10,colors.black)
+end
+--Centering Text
+function cText(hor,str)
+	slength=string.len(str)
+	xhor=hor-(slength/2)
+	term.setCursorPos(xhor,12)
+	term.write(str)
+	sdn=math.random(1,5)
+	sleep(sdn)
+	shdnscrn()
+end
+--Shutdown
+function shtdn()
+    shdnscrn()
+    term.setTextColor(colors.red)
+cText(26,"Stopping LAN/WAN Services")
+cText(26,"Backing-up Properties")
+cText(26,"Saving Files")
+cText(26,"Closing Programs")
+cText(26,"Ending Processes")
+cText(26,"SHUTTING DOWN")
+      term.clear()
+      term.setTextColor(colors.black)
+      shdnscrn()
+ end
+--Pre loop
+desktop()
+strtbr=nil
+--Loop
+os.pullEvent = os.pullEventRaw
+while true do
+  sleep(0)
+  local event, button, xPos, yPos = os.pullEvent("mouse_click")
+  if strtbr == nil then
+    if (xPos > 0 and xPos < 5) and (yPos > 17 and yPos < 20) then
+      starttab()
+      strtbr = 1
+      sleep(1)
+    end
+  elseif strtbr == 1 then
+    if (xPos > 0 and xPos < 5) and (yPos > 17 and yPos < 20) then
+      desktop()
+      startbar()
+      strtbr = nil
+      sleep(1)
+    elseif (xPos > 0 and xPos < 8) and (yPos > 14 and yPos < 16) then
+      shell.run("mc")
+      break
+    elseif (xPos > 11 and xPos < 15) and (yPos > 15 and yPos < 17) then
+      shtdn()
+      sleep(1)
+      os.shutdown()
+    elseif not (xPos > 1 and xPos < 15) and not (yPos > 7 and yPos < 17) then
+      strtbr = nil
+      desktop()
+      startbar()
+    end
+  end
+end
