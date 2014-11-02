@@ -1,4 +1,9 @@
-term.clear()
+--Clear Func
+function clear()
+  term.setBackgroundColor(colors.black)
+  term.clear()
+  term.setCursorPos(1,1)
+end
 --Draw func
 function draw(dx1,dy1,dx2,dy2,dcol)
   for a=dx1,dx2 do
@@ -16,95 +21,121 @@ function text(tx,ty,tcol,tcolb,txt)
   term.setBackgroundColor(tcolb)
   term.write(txt)
 end
---Desktop
---x min/max 1,51
---y min/max 1,19
-function desktop()
+--Background
+function login()
+  draw(1,1,51,19,colors.lightBlue)
+  draw(49,18,50,18,colors.red)--Shutdown
+  draw(20,6,28,10,colors.lightGray)--Image
+  draw(21,7,27,9,colors.blue)
+  draw(18,12,30,12,colors.white)--Username
+  draw(18,14,30,14,colors.white)--Password
+  draw(32,14,33,14,colors.blue)--Login
+  draw(21,16,27,16,colors.blue)--Cancel Button
+  text(22,16,colors.white,colors.blue,"Cancel")
+  text(20,19,colors.white,colors.lightBlue,"Windows*7 LUA")
+  draw(15,18,16,18,colors.red)
+  draw(17,18,18,18,colors.green)
+  draw(15,19,16,19,colors.blue)
+  draw(17,19,18,19,colors.yellow)
+end
+--Login Success
+function lgnSc()
+  draw(1,1,51,19,colors.lightBlue)
+  text(20,19,colors.white,colors.lightBlue,"Windows*7 LUA")
+  draw(15,18,16,18,colors.red)
+  draw(17,18,18,18,colors.green)
+  draw(15,19,16,19,colors.blue)
+  draw(17,19,18,19,colors.yellow)
+  draw(19,8,19,8,colors.blue)
+  text(20,8,colors.white,colors.lightBlue,"Welcome")
+  sleep(3)
   draw(1,1,51,19,colors.lightBlue)--Desktop
   draw(24,9,25,9,colors.red)
   draw(26,9,27,9,colors.green)
   draw(24,10,25,10,colors.blue)
   draw(26,10,27,10,colors.yellow)
-  draw(1,18,51,19,colors.black)--StartBar
-  draw(1,18,2,18,colors.red)
-  draw(3,18,4,18,colors.green)
-  draw(1,19,2,19,colors.blue)
-  draw(3,19,4,19,colors.yellow)
+  sleep(3)
 end
---StartTab
-function starttab()
-  draw(1,7,10,16,colors.white)
-  draw(1,16,10,17,colors.lightGray)
-  draw(11,7,15,17,colors.blue)
-  text(2,15,colors.black,colors.white,"Minecraft")
-  text(1,16,colors.black,colors.lightGray,">All")
-  text(1,17,colors.black,colors.lightGray," Programs")
-  draw(12,16,14,16,colors.red)
-  sleep(1)
+--Login Fail
+function lgnFl()
+  draw(1,1,51,19,colors.lightBlue)
+  draw(16,13,16,13,colors.red)
+  text(18,13,colors.white,colors.lightBlue,"Login Failed")
 end
---Shutdown Desktop
-function shdnscrn()
-  term.clear()
-  draw(1,1,51,17,colors.gray)
-  draw(1,18,4,19,colors.black)
-  draw(5,18,51,19,colors.lightGray)
-  draw(24,9,27,10,colors.black)
+	
+--Typing function
+function inputBox(m)
+	term.setCursorBlink(true)
+	input={}
+	inputnum=0
+	if m==1 then
+		term.setCursorPos(18,12)
+		term.setBackgroundColor(colors.white)
+		repeat
+			event={os.pullEvent()}
+			if event[1]=='char' then
+				term.write(event[2])
+				table.insert(input,event[2])
+				inputnum=inputnum+1
+			elseif event[1]=='key' and event[2]==14 then
+				input[inputnum]=nil
+				inputnum=inputnum-1
+				ix=inputnum+18
+				draw(ix,12,ix,12,colors.white)
+			end
+		until (event[1]=='key' and event[2]==28) or (event[1]=='key' and event[2]==15) or (event[1]=='mouse_click' and ((event[2]<18 or event[2]>30) and event[3]~=12))
+	elseif m==2 then
+		term.setCursorPos(18,14)
+		term.setBackgroundColor(colors.white)
+		repeat
+			event={os.pullEvent()}
+			if event[1]=='char' then
+				term.write("*")
+				table.insert(input,event[2])
+				inputnum=inputnum+1
+			elseif event[1]=='key' and event[2]==14 then
+				input[inputnum]=nil
+				inputnum=inputnum-1
+				ix=inputnum+18
+				draw(ix,14,ix,14,colors.white)
+			end
+		until (event[1]=='key' and event[2]==28) or (event[1]=='key' and event[2]==15) or (event[1]=='mouse_click' and ((event[2]<18 or event[2]>30) and event[3]~=14))
+	end
+	term.setCursorBlink(false)
 end
---Centering Text
-function cText(hor,str)
-	slength=string.len(str)
-	xhor=hor-(slength/2)
-	term.setCursorPos(xhor,12)
-	term.write(str)
-	sdn=math.random(1,5)
-	sleep(sdn)
-	shdnscrn()
-end
---Shutdown
-function shtdn()
-    shdnscrn()
-    term.setTextColor(colors.red)
-cText(26,"Stopping LAN/WAN Services")
-cText(26,"Backing-up Properties")
-cText(26,"Saving Files")
-cText(26,"Closing Programs")
-cText(26,"Ending Processes")
-cText(26,"SHUTTING DOWN")
-      term.clear()
-      term.setTextColor(colors.black)
-      shdnscrn()
- end
---Pre loop
-desktop()
-strtbr=nil
+--PreLoop
+clear()
+login()
+term.setCursorPos(1,1)
+--Users
+local users = {["axel"] = "14363"}
 --Loop
-os.pullEvent = os.pullEventRaw
-while true do
+term.setTextColor(colors.gray)
+repeat
+	continue=false
   sleep(0)
-  local event, button, xPos, yPos = os.pullEvent("mouse_click")
-  if strtbr == nil then
-    if (xPos > 0 and xPos < 5) and (yPos > 17 and yPos < 20) then
-      starttab()
-      strtbr = 1
-      sleep(1)
-    end
-  elseif strtbr == 1 then
-    if (xPos > 0 and xPos < 5) and (yPos > 17 and yPos < 20) then
-      desktop()
-      startbar()
-      strtbr = nil
-      sleep(1)
-    elseif (xPos > 0 and xPos < 8) and (yPos > 14 and yPos < 16) then
-      shell.run("mc")
-      break
-    elseif (xPos > 11 and xPos < 15) and (yPos > 15 and yPos < 17) then
-      shtdn()
-      sleep(1)
-      os.shutdown()
-    elseif not (xPos > 1 and xPos < 15) and not (yPos > 7 and yPos < 17) then
-      strtbr = nil
-      desktop()
-      startbar()
+  local event={os.pullEvent()}
+
+if event[1]=='mouse_click' then
+  if (event[3] > 18 and event[3] < 30) and (event[4] > 11 and event[4] < 13) then
+  	inputBox(1)
+    usnm=table.concat(input)
+  elseif (event[3] > 18 and event[3] < 30) and (event[4] > 13 and event[4] < 15) then
+  	inputBox(2)
+    pswrd=table.concat(input)
+  elseif (event[3] > 31 and event[3] < 34) and (event[4] > 13 and event[4] < 15) then
+    if users[usnm] == pswrd then
+      clear()
+      lgnSc()
+	  clear()
+	  continue=true
+    else
+      clear()
+      lgnFl()
+      sleep(3)
+      login()    
     end
   end
 end
+until continue==true
+shell.run("wndws")
